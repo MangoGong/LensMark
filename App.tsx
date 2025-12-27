@@ -207,7 +207,7 @@ function App() {
           const els = { ...prev.elements };
           const draggedEl = els[draggedId as keyof typeof els];
           
-          const groupItems = Object.entries(els)
+          const groupItems = (Object.entries(els) as [string, WatermarkElement][])
               .filter(([k, el]) => el.side === targetSide && el.line === targetLine && k !== draggedId)
               .sort((a, b) => a[1].order - b[1].order);
 
@@ -258,7 +258,7 @@ function App() {
   };
 
   const renderDropZone = (side: 'left' | 'right', line: 1 | 2, label: string) => {
-      const items = Object.entries(settings.elements)
+      const items = (Object.entries(settings.elements) as [string, WatermarkElement][])
           .filter(([_, el]) => el.side === side && el.line === line)
           .sort((a, b) => a[1].order - b[1].order);
       
@@ -534,13 +534,13 @@ function App() {
               </div>
 
               {/* Hidden Items Bin */}
-              {Object.values(settings.elements).some(e => e.side === 'off') && (
+              {(Object.values(settings.elements) as WatermarkElement[]).some(e => e.side === 'off') && (
                   <div className="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4 border-2 border-dashed border-gray-200 dark:border-gray-700">
                      <h3 className="text-xs font-bold text-gray-400 mb-2 uppercase flex items-center gap-2">
                         <EyeOff size={14} /> {t.off}
                      </h3>
                      <div className="flex flex-wrap gap-2">
-                          {Object.entries(settings.elements).filter(e => e[1].side === 'off').map(([key, el]) => (
+                          {(Object.entries(settings.elements) as [string, WatermarkElement][]).filter(e => e[1].side === 'off').map(([key, el]) => (
                               <button
                                  key={key}
                                  onClick={() => handleRestore(key)}
