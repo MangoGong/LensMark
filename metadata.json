@@ -1,0 +1,5 @@
+{
+  "name": "LensMark - Photo Watermark Tool",
+  "description": "A professional tool to add 'Shot on' style watermarks to your photos. Supports EXIF data extraction, automatic logo matching, and customizable layouts.",
+  "requestFramePermissions": []
+}
