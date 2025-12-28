@@ -133,9 +133,21 @@ export const generateWatermark = async (
              const blob = new Blob([settings.customLogoSvg], {type: 'image/svg+xml'});
              logoImgSrc = URL.createObjectURL(blob);
         } else {
-             const filename = (settings.selectedLogoKey === 'AUTO' ? logoKey : settings.selectedLogoKey) || 'DEFAULT';
-             const cleanName = filename.charAt(0).toUpperCase() + filename.slice(1).toLowerCase();
-             logoImgSrc = `/logos/${cleanName}.svg`;
+             // 1. Get the key (e.g. "SONY", "DEFAULT")
+             let rawKey = (settings.selectedLogoKey === 'AUTO' ? logoKey : settings.selectedLogoKey) || 'DEFAULT';
+             
+             // 2. Handle "DEFAULT" mapping explicitly to "camera" (assuming you have a camera.svg, or default.svg)
+             // We'll map 'DEFAULT' to 'camera' to match generic expectations, or 'default' if you named it that.
+             // Given the previous constants file, the ID was 'Camera', so we'll look for 'camera.svg'
+             if (rawKey === 'DEFAULT') rawKey = 'camera';
+
+             // 3. Force lowercase to match typical web assets (e.g., 'sony.svg', 'nikon.svg')
+             const cleanName = rawKey.toLowerCase();
+             
+             // 4. Use import.meta.env.BASE_URL to handle relative paths correctly (fixes GitHub Pages subpath issues)
+             // Ensure base url ends with slash or handle it. Vite BASE_URL usually includes slash if not empty.
+             // With base: './', it is './'.
+             logoImgSrc = `${(import.meta as any).env.BASE_URL}logos/${cleanName}.svg`;
         }
         const lImg = new Image();
 
